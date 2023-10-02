@@ -102,7 +102,7 @@
 // run();
 const { Octokit } = require("@octokit/core");
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-const fetch = require("node-fetch");
+const axios = require("axios");
 
 async function addImageReactionToComment(
   owner,
@@ -112,10 +112,10 @@ async function addImageReactionToComment(
 ) {
   try {
     // Fetch an image from an API (e.g., The Cat API)
-    const imageResponse = await fetch(
+    const imageResponse = await axios.get(
       "https://api.thecatapi.com/v1/images/search"
     );
-    const imageResult = await imageResponse.json();
+    const imageResult = imageResponse.data;
 
     if (imageResult && imageResult[0] && imageResult[0].url) {
       // Create a comment with the image
