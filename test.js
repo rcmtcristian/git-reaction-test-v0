@@ -117,7 +117,7 @@ async function addReactionToComment(
         repo,
         issue_number: pull_request_number,
         comment_id,
-        content: "+1", // You can customize the reaction content here
+        content: "-1, ", // You can customize the reaction content here
       }
     );
     console.log("Reaction added successfully!");
