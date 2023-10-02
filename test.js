@@ -103,26 +103,40 @@
 const { Octokit } = require("@octokit/core");
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
-async function addReactionToComment(
+async function addImageReactionToComment(
   owner,
   repo,
   pull_request_number,
   comment_id
 ) {
   try {
-    await octokit.request(
-      "POST /repos/{owner}/{repo}/issues/{issue_number}/comments/{comment_id}/reactions",
-      {
-        owner,
-        repo,
-        issue_number: pull_request_number,
-        comment_id,
-        content: "-1, ", // You can customize the reaction content here
-      }
+    // Fetch an image from an API (e.g., The Cat API)
+    const imageResponse = await fetch(
+      "https://api.thecatapi.com/v1/images/search"
     );
-    console.log("Reaction added successfully!");
+    const imageResult = await imageResponse.json();
+
+    if (imageResult && imageResult[0] && imageResult[0].url) {
+      // Create a comment with the image
+      const imageComment = `![Cat](${imageResult[0].url})`;
+
+      // Post the image as a comment reaction
+      await octokit.request(
+        "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
+        {
+          owner,
+          repo,
+          issue_number: pull_request_number,
+          body: imageComment,
+        }
+      );
+
+      console.log("Image reaction added successfully!");
+    } else {
+      console.error("No image URL found in the API response.");
+    }
   } catch (error) {
-    console.error("Error adding reaction:", error.message);
+    console.error("Error adding image reaction:", error.message);
   }
 }
 
@@ -130,4 +144,4 @@ const [owner, repo] = process.env.GITHUB_REPOSITORY.split("/");
 const pull_request_number = process.env.GITHUB_EVENT_NUMBER;
 const comment_id = process.env.GITHUB_COMMENT_ID;
 
-addReactionToComment(owner, repo, pull_request_number, comment_id);
+addImageReactionToComment(owner, repo, pull_request_number, comment_id);
