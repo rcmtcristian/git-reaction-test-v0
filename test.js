@@ -126,5 +126,8 @@ async function addReactionToComment(
   }
 }
 
-const { owner, repo, number, id } = process.env.GITHUB;
-addReactionToComment(owner, repo, number, id);
+const [owner, repo] = process.env.GITHUB_REPOSITORY.split("/");
+const pull_request_number = process.env.GITHUB_EVENT_NUMBER;
+const comment_id = process.env.GITHUB_COMMENT_ID;
+
+addReactionToComment(owner, repo, pull_request_number, comment_id);
