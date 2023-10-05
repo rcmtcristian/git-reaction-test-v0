@@ -136,13 +136,12 @@ async function addImageReactionToComment(
     const imageResponse = await axios.get(
       `https://emojik.vercel.app/s/😃_${randomEmote}?size=128`
     );
-    const imageResult = imageResponse;
-    // const imageResult = imageResponse.data;
-    // console.log(imageResult);
+    const imageResult = imageResponse.data;
 
-    if (imageResult && imageResult[0] && imageResult[0].url) {
-      // Create a comment with the image
-      const imageComment = `![Cat](${imageResult})`;
+    if (imageResult && imageResult.url) {
+      // Extract the image URL and create a comment with the image
+      const imageUrl = imageResult.url;
+      const imageComment = `![Cat](${imageUrl})`;
 
       // Post the image as a comment reaction
       await octokit.request(
@@ -161,6 +160,10 @@ async function addImageReactionToComment(
     }
   } catch (error) {
     console.error("Error adding image reaction:", error.message);
+    if (error.response) {
+      console.error("Response status:", error.response.status);
+      console.error("Response data:", error.response.data);
+    }
   }
 }
 
