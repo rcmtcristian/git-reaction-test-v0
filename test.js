@@ -136,7 +136,8 @@ async function addImageReactionToComment(
     const imageResponse = await axios.get(
       `https://emojik.vercel.app/s/😃_${randomEmote}?size=128`
     );
-    const imageResult = imageResponse.data;
+    const imageResult = imageResponse;
+    // const imageResult = imageResponse.data;
     console.log(imageResult);
 
     if (imageResult && imageResult[0] && imageResult[0].url) {
