@@ -100,9 +100,10 @@
 // }
 
 // run();
-import { Octokit } from "@octokit/core";
+const { Octokit } = require("@octokit/core");
+const axios = require("axios");
+
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-import { get } from "axios";
 
 async function addImageReactionToComment(
   owner,
@@ -132,14 +133,15 @@ async function addImageReactionToComment(
     const randomEmote = getRandomEmote();
 
     // Fetch an image from an API (e.g., The Cat API)
-    const imageResponse = await get(
+    const imageResponse = await axios.get(
       `https://emojik.vercel.app/s/😃_${randomEmote}?size=128`
     );
-    // const imageResult = imageResponse.data;
-    console.log(imageResponse);
+    const imageResult = imageResponse.data;
+    console.log(imageResult);
+
     if (imageResult && imageResult[0] && imageResult[0].url) {
       // Create a comment with the image
-      const imageComment = `![Cat](${imageResponse[0].url})`;
+      const imageComment = `![Cat](${imageResult[0].url})`;
 
       // Post the image as a comment reaction
       await octokit.request(
