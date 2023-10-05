@@ -138,11 +138,11 @@ async function addImageReactionToComment(
     );
     const imageResult = imageResponse;
     // const imageResult = imageResponse.data;
-    console.log(imageResult);
+    // console.log(imageResult);
 
     if (imageResult && imageResult[0] && imageResult[0].url) {
       // Create a comment with the image
-      const imageComment = `![Cat](${imageResult[0].url})`;
+      const imageComment = `![Cat](${imageResult})`;
 
       // Post the image as a comment reaction
       await octokit.request(
