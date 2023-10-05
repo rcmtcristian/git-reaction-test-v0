@@ -100,9 +100,9 @@
 // }
 
 // run();
-const { Octokit } = require("@octokit/core");
+import { Octokit } from "@octokit/core";
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-const axios = require("axios");
+import { get } from "axios";
 
 async function addImageReactionToComment(
   owner,
@@ -111,15 +111,35 @@ async function addImageReactionToComment(
   comment_id
 ) {
   try {
-    // Fetch an image from an API (e.g., The Cat API)
-    const imageResponse = await axios.get(
-      "https://api.thecatapi.com/v1/images/search"
-    );
-    const imageResult = imageResponse.data;
+    function getRandomEmote() {
+      const emotes = [
+        "😊",
+        "👍",
+        "🙌",
+        "👏",
+        "🤔",
+        "😂",
+        "😎",
+        "🔥",
+        "💡",
+        "✨",
+      ];
+      const randomIndex = Math.floor(Math.random() * emotes.length);
+      return emotes[randomIndex];
+    }
 
+    // Example usage:
+    const randomEmote = getRandomEmote();
+
+    // Fetch an image from an API (e.g., The Cat API)
+    const imageResponse = await get(
+      `https://emojik.vercel.app/s/😃_${randomEmote}?size=128`
+    );
+    // const imageResult = imageResponse.data;
+    console.log(imageResponse);
     if (imageResult && imageResult[0] && imageResult[0].url) {
       // Create a comment with the image
-      const imageComment = `![Cat](${imageResult[0].url})`;
+      const imageComment = `![Cat](${imageResponse[0].url})`;
 
       // Post the image as a comment reaction
       await octokit.request(
@@ -146,3 +166,53 @@ const pull_request_number = process.env.GITHUB_EVENT_NUMBER;
 const comment_id = process.env.GITHUB_COMMENT_ID;
 
 addImageReactionToComment(owner, repo, pull_request_number, comment_id);
+
+// Import any necessary libraries or functions for making API requests (e.g., fetch, axios).
+// Replace this with the actual import statement for your environment.
+
+// function getRandomEmote() {
+//   const emotes = ["😊", "👍", "🙌", "👏", "🤔", "😂", "😎", "🔥", "💡", "✨"];
+//   const randomIndex = Math.floor(Math.random() * emotes.length);
+//   return emotes[randomIndex];
+// }
+
+// // Include the getRandomEmote and fetchEmoteImage functions here as previously defined.
+
+// // Get a reference to the button element and the emote container
+// const fetchButton = document.getElementById("fetchButton");
+// const emoteContainer = document.getElementById("emoteContainer");
+
+// // Add a click event listener to the button
+// fetchButton.addEventListener("click", fetchAndDisplayEmote);
+
+// async function fetchAndDisplayEmote() {
+//   try {
+//     const randomEmote = "👏";
+//     const apiUrl = `https://emojik.vercel.app/s/😃_${randomEmote}?size=128`;
+
+//     // Make the API request using the appropriate method (e.g., fetch or axios).
+//     const response = await fetch(apiUrl);
+
+//     if (!response.ok) {
+//       throw new Error(`API request failed with status ${response.status}`);
+//     }
+
+//     const imageData = await response.blob();
+
+//     // Create an image element and set its source to the fetched emote image
+//     const emoteImage = document.createElement("img");
+//     emoteImage.src = URL.createObjectURL(imageData);
+//     emoteImage.alt = "Random Emote";
+
+//     // Clear any previous content in the emote container
+//     emoteContainer.innerHTML = "";
+
+//     // Append the image element to the emote container
+//     emoteContainer.appendChild(emoteImage);
+//   } catch (error) {
+//     console.error("An error occurred:", error);
+//   }
+
+//   // Ensure the function doesn't return true or a promise here.
+//   // You can simply omit a return statement or return undefined.
+// }
