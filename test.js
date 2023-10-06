@@ -136,11 +136,11 @@ async function addImageReactionToComment(
     const imageResponse = await axios.get(
       `https://emojik.vercel.app/s/😃_${randomEmote}?size=128`
     );
-    const imageResult = imageResponse.data;
+    const imageResult = imageResponse;
 
-    if (imageResult && imageResult.url) {
+    if (imageResult) {
       // Extract the image URL and create a comment with the image
-      const imageUrl = imageResult.url;
+      const imageUrl = imageResult;
       const imageComment = `![Cat](${imageUrl})`;
 
       // Post the image as a comment reaction
